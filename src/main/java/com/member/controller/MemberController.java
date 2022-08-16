@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.member.domain.entity.Loghistory;
 import com.member.domain.entity.Member;
+import com.member.domain.repository.LoghistoryRepository;
 import com.member.domain.repository.MemberRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,6 +44,8 @@ public class MemberController {
     @Autowired
     MemberRepository repository;
 
+    @Autowired
+    LoghistoryRepository logrepository;
 
     @Autowired
     ObjectMapper mapper;
@@ -199,10 +203,16 @@ public class MemberController {
         String strEmail = newData.getEmail();
         String strPassWrod = newData.getEncryptedPwd();
 
+
+        Loghistory datahistory = mapper.convertValue(newData, Loghistory.class);
+
         Optional<Member> data = repository.findByEmail(strEmail);
 
         if (data.isPresent()) {
             if(data.get().getEncryptedPwd() == strPassWrod){
+              //  datahistory.setE
+                datahistory = logrepository.save(datahistory);
+
                 return ResponseEntity.ok().body(data.get());
             }else{
                 return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);

@@ -49,6 +49,8 @@ spring:
     console:
       enabled: true
       path: /h2
+      settings:
+        web-allow-others: true  # 추가
 
 logging:
   level:
