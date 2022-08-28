@@ -47,6 +47,10 @@ public class Loghistory implements Serializable {
     @Schema(description = "email", nullable = false)
     private String email;
 
+    @Column(nullable = true, length = 10, unique = false)
+    @Schema(description = "로그인상태 staus", nullable = false)
+    private String staus;
+
     @CreatedDate
     @Column(nullable = true, unique = false)
     @Schema(description = "createDate", nullable = false)
@@ -60,9 +64,10 @@ public class Loghistory implements Serializable {
 
 
     @Builder
-    public Loghistory(Long id, String email, LocalDateTime createDate, LocalDateTime updateDate) {
+    public Loghistory(Long id, String email, String staus,LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.email = email;
+        this.staus = staus;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }

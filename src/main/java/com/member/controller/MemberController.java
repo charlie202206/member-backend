@@ -25,6 +25,7 @@ import com.member.domain.entity.Loghistory;
 import com.member.domain.entity.Member;
 import com.member.domain.repository.LoghistoryRepository;
 import com.member.domain.repository.MemberRepository;
+import com.member.util.EncryptionUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -110,6 +111,10 @@ public class MemberController {
     @PostMapping("/members")
     ResponseEntity<Member> postData(@RequestBody Member newData) {
         try {
+            String encytedPwd = newData.getEncryptedPwd();
+            if(newData.getEncryptedPwd() != null){
+                newData.setEncryptedPwd (EncryptionUtils.encryptMD5(encytedPwd));
+            }
             newData = repository.save(newData);
             return new ResponseEntity<>(newData, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -200,21 +205,24 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "Member not found", content = @Content) })
     @PostMapping("/login")
     public ResponseEntity<Member> login(@RequestBody Member newData) {
-        String strEmail = newData.getEmail();
+        String strEmail = newData.getEmail().trim();
         String strPassWrod = newData.getEncryptedPwd();
-
+        String encytedPwd = EncryptionUtils.encryptMD5(strPassWrod);
 
         Loghistory datahistory = mapper.convertValue(newData, Loghistory.class);
 
         Optional<Member> data = repository.findByEmail(strEmail);
 
         if (data.isPresent()) {
-            if(data.get().getEncryptedPwd() == strPassWrod){
-              //  datahistory.setE
+            if(encytedPwd.equals(data.get().getEncryptedPwd())){
+                //  datahistory.setE
+                datahistory.setStaus("200");
                 datahistory = logrepository.save(datahistory);
 
                 return ResponseEntity.ok().body(data.get());
             }else{
+                datahistory.setStaus("203");
+                datahistory = logrepository.save(datahistory);
                 return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
             }
         } else {
