@@ -21,6 +21,7 @@ phases:
       - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 104844728320.dkr.ecr.ap-northeast-2.amazonaws.com
   build:
     commands:
+      - chmod 0755 gradlew kubedeploy.sh
       - ./gradlew build
       - echo Building the Docker image
       - echo REPOSITORY_URI $REPOSITORY_URI
