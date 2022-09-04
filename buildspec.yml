@@ -43,6 +43,7 @@ phases:
       - echo kubectl set image member.apps/member member=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMA_TAG
       #- kubectl apply -f ./kubernetes/deployment.yml
       #- kubectl apply -f ./kubernetes/service.yml
+      - ./kubedeploy.sh delete
       - ./kubedeploy.sh apply
 
 cache:
