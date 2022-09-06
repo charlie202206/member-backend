@@ -4,6 +4,7 @@ package com.member.controller;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -132,6 +133,7 @@ public class MemberController {
         return repository.findById(id) //
                 .map(oldData -> {
                     newData.setId(id);
+                    newData.setEncryptedPwd(EncryptionUtils.encryptMD5(newData.getEncryptedPwd()));
                     return new ResponseEntity<>(repository.save(newData), HttpStatus.OK);
                 })
                 .orElseGet(() -> {
@@ -148,12 +150,18 @@ public class MemberController {
 	@PatchMapping("/members/{id}")
     ResponseEntity<Member> patchData(@RequestBody Map<String, Object> newMap, @PathVariable("id") Long id) {
         Member newData = mapper.convertValue(newMap, Member.class);
+        if(id==null){
+            id = newData.getId();
+        }
         return repository.findById(id) //
                 .map(oldData -> {
                     newMap.forEach((strKey, strValue) -> {
                         switch(strKey) {
                             case "email" :  oldData.setEmail(newData.getEmail()); break;
                             case "name" :  oldData.setName(newData.getName()); break;
+                            case "encryptedPwd" : oldData.setEncryptedPwd(EncryptionUtils.encryptMD5(newData.getEncryptedPwd())); break;
+                            case "salesType" :  oldData.setSalesType(newData.getSalesType()); break;
+                            case "phoneNumber" :  oldData.setPhoneNumber(newData.getPhoneNumber()); break;
                         }
                     });
                     return new ResponseEntity<>(repository.save(oldData), HttpStatus.OK);
