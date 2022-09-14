@@ -52,7 +52,7 @@ public class MemberController {
     @Autowired
     ObjectMapper mapper;
 
-    // @Operation(summary = "회원정보 전체조회" , summary = "회원정보 조회" )
+    @Operation(summary = "회원정보 전체조회" , summary = "회원정보 조회" )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the Members", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Member.class)) }),
