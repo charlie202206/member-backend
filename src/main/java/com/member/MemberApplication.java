@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@EnableJpaAuditing     // JPA Auditing을 활성화 하기 위한 어노테이션
+@EnableJpaAuditing     // JPA Auditing을 활성화 하기 위한 어노테이션  
 @SpringBootApplication
 // @EnableBinding(KafkaProcessor.class)
 public class MemberApplication {
